@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Demiana</title>
+<style>
+body {
+    margin: 0;
+    background: linear-gradient(to right, #ff9a9e, #fad0c4);
+    font-family: Arial;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+h1 {
+    font-size: 70px;
+    margin-top: 50px;
+    animation: glow 1.5s linear infinite alternate;
+}
+
+@keyframes glow {
+    0% { color: #fff; text-shadow: 0 0 10px #fff; }
+    50% { color: #fffa00; text-shadow: 0 0 30px #fffa00; }
+    100% { color: #ff69b4; text-shadow: 0 0 40px #ff69b4; }
+}
+
+#message {
+    display: none;
+    width: 80%;
+    max-height: 70vh;
+    margin: 20px auto;
+    font-size: 26px;
+    line-height: 2;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-y: auto;
+    white-space: pre-line;
+    position: relative;
+    z-index: 1;
+}
+
+#title {
+    display: none;
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: glow 1.5s linear infinite alternate;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 22px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin: 20px;
+    z-index: 1;
+    position: relative;
+}
+
+.heart {
+    position: fixed;
+    bottom: -20px;
+    font-size: 22px;
+    animation: float 6s linear infinite;
+    z-index: 2;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-800px); opacity: 0; }
+}
+
+#fireworksCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: none;
+    z-index: 0; /* تحت الرسالة والزرار */
+}
+</style>
+</head>
+<body>
+
+<!-- الصفحة الأولى -->
+<div id="intro">
+    <h1>From Mazen to Demiana 💖</h1>
+    <button onclick="showMessage()">اضغطي هنا</button>
+</div>
+
+<!-- الرسالة الطويلة -->
+<div id="message">
+    <div id="title">Happy Birthday Demiana 🥳</div>
+    <div id="text"></div>
+    <button id="fireButton" onclick="showFireworks()" style="display:none">اضغطي هنا</button>
+</div>
+
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="fireworksCanvas"></canvas>
+<audio id="fireworkSound">
+    <source src="fireworks.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// الرسالة
+const lines = [
+"Demiana لو قعدت أتكلم من هنا لبكرة مش هيكفي حاجة من اللي عايز أقوله",
+"بجد كانت فترة صغيرة بس شوفت فيها معاكي كل حاجة حلوة",
+"لأنك محترمة وقلبك طيب وبتحبي كل اللي حواليكي",
+"",
+"وبجد غيرتي حياتي في الكام شهر دول",
+"لأن حياتي لو مكنش فيها Demiana مكنتش هتبقى ليها طعم",
+"ربنا يخليكي ليا ونفضل صحاب وقريبين طول العمر",
+"",
+"كل سنة وانتي طيبة",
+"أتمنى السنة الجديدة من عمرك تكون أحلى من اللي قبلها",
+"سنة مليانة ضحك وراحة ونجاح يفرح قلبك",
+"",
+"ربنا يخليكي دايمًا بنفس طيبتك وقلبك النضيف",
+"وتفضلي شخص جميل في حياة كل اللي حواليكي من غير ما تحاولي",
+"",
+"أتمنى أي حاجة بتتمنيها تتحقق",
+"وأي زعل في حياتك يبعد",
+"وأي تعب يتحول لفرح",
+"",
+"انتي تستاهلي كل خير",
+"وتستاهلي أيام حلوة تشبه قلبك",
+"وتستاهلي إنك تبتسمي دايمًا من غير سبب",
+"",
+"ربنا يحفظك ويخليكي دايمًا بخير",
+"وكل سنة وانتي أقرب لأحلامك",
+"وأقرب للسعادة اللي تليق بيكي",
+"",
+"كل سنة وانتي طيبة يا Demiana",
+"وعقبال مليون سنة حلوة 😍🥳"
+];
+
+let lineIndex = 0;
+let charIndex = 0;
+
+// عرض الرسالة
+function showMessage() {
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("message").style.display = "block";
+    document.getElementById("title").style.display = "block"; // يظهر العنوان فوق الرسالة
+    document.getElementById("music").play();
+    lineIndex = 0;
+    charIndex = 0;
+    typeLine();
+    setInterval(createHeart, 300);
+}
+
+// كتابة تدريجية
+function typeLine() {
+    const textDiv = document.getElementById("text");
+    if (lineIndex >= lines.length) {
+        document.getElementById("fireButton").style.display = "inline-block"; // يظهر زرار الألعاب النارية بعد الرسالة
+        return;
+    }
+    if (charIndex < lines[lineIndex].length) {
+        textDiv.innerHTML += lines[lineIndex].charAt(charIndex);
+        charIndex++;
+        textDiv.scrollTop = textDiv.scrollHeight;
+        setTimeout(typeLine, 40);
+    } else {
+        textDiv.innerHTML += "<br>";
+        charIndex = 0;
+        lineIndex++;
+        setTimeout(typeLine, 400);
+    }
+}
+
+// القلوب
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}
+
+// الألعاب النارية على كامل الشاشة وأكثر عدد
+function showFireworks() {
+    const canvas = document.getElementById("fireworksCanvas");
+    canvas.style.display = "block";
+    const ctx = canvas.getContext("2d");
+    const width = canvas.width = window.innerWidth;
+    const height = canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ['#ff0040', '#ff8000', '#ffff00', '#00ff80', '#00ffff', '#0080ff', '#8000ff', '#ff00ff', '#ff6666', '#66ff66'];
+
+    function createExplosion(x, y) {
+        for (let i = 0; i < 200; i++) { // زدنا العدد
+            particles.push({
+                x: x,
+                y: y,
+                dx: (Math.random() - 0.5) * 12, // سرعات أكبر
+                dy: (Math.random() - 0.5) * 12,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: 1
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height); // خلفية شفافة
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            p.x += p.dx;
+            p.y += p.dy;
+            p.alpha -= 0.004; // أطول حركة
+            if (p.alpha <= 0) {
+                particles.splice(i, 1);
+                i--;
+                continue;
+            }
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.alpha;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(animate);
+    }
+
+    canvas.addEventListener('click', (e) => createExplosion(e.clientX, e.clientY));
+    createExplosion(width/2, height/2); // أول انفجار تلقائي
+    animate();
+
+    // تشغيل صوت الألعاب النارية
+    const fireSound = document.getElementById("fireworkSound");
+    fireSound.play();
+}
+</script>
+</body>
+</html>
